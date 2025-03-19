@@ -1,4 +1,4 @@
-package devcon.map
+package devcon.map.view
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
