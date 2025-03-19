@@ -1,4 +1,4 @@
-package devcon.map
+package devcon
 
 import android.app.Application
 import devcon.data.PlaceDatabaseManager
