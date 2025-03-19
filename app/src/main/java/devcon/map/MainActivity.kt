@@ -19,7 +19,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -44,6 +43,10 @@ class MainActivity : AppCompatActivity() {
 
         binding.recyclerviewKeyword.apply {
             adapter = keywordAdapter
+
+            val margin = resources.getDimension(R.dimen.margin_medium)
+            val padding = resources.getDimension(R.dimen.padding_extra_small)
+            addItemDecoration(HorizontalSpaceDecoration(padding, padding, margin, margin))
         }
     }
 
