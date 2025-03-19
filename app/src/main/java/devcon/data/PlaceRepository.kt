@@ -23,6 +23,31 @@ class PlaceRepository(
         return newRowId
     }
 
+    fun insertAll(places: List<Place>): Boolean {
+        val db = dbHelper.writableDatabase
+        db.beginTransaction()
+        return try {
+            for (place in places) {
+                val values =
+                    ContentValues().apply {
+                        put(PlaceContract.PlaceEntry.COLUMN_NAME, place.name)
+                        put(PlaceContract.PlaceEntry.COLUMN_TYPE, place.type)
+                        put(PlaceContract.PlaceEntry.COLUMN_ADDRESS, place.address)
+                        put(PlaceContract.PlaceEntry.COLUMN_LATITUDE, place.latitude)
+                        put(PlaceContract.PlaceEntry.COLUMN_LONGITUDE, place.longitude)
+                    }
+                db.insert(PlaceContract.PlaceEntry.TABLE_NAME, null, values)
+            }
+            db.setTransactionSuccessful()
+            true
+        } catch (e: Exception) {
+            e.printStackTrace()
+            false
+        } finally {
+            db.endTransaction()
+        }
+    }
+
     fun getPlaceList(): List<Place> {
         val placesList = mutableListOf<Place>()
         val db = dbHelper.readableDatabase
