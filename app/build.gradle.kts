@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "devcon.learn.contacts"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "devcon.learn.kakao.contacts"
@@ -26,6 +26,9 @@ android {
                 "proguard-rules.pro"
             )
         }
+    }
+    buildFeatures {
+        viewBinding = true
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
