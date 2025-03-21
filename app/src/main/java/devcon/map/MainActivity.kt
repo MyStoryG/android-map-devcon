@@ -12,7 +12,7 @@ import devcon.map.ui.KeywordAdapter
 import devcon.map.ui.KeywordViewModel
 
 class MainActivity : AppCompatActivity() {
-    private val keywordViewModel by viewModels<KeywordViewModel>()
+    private val keywordViewModel by viewModels<KeywordViewModel> { KeywordViewModel.Factory }
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var keywordAdapter: KeywordAdapter

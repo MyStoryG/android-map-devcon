@@ -1,20 +1,22 @@
 package devcon.map.ui
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import devcon.map.MapApplication
 import devcon.map.data.KeywordRepository
 import devcon.map.model.Keyword
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class KeywordViewModel(
-    application: Application,
-) : AndroidViewModel(application) {
-    private val repository = KeywordRepository(application)
-
+    private val keywordRepository: KeywordRepository,
+) : ViewModel() {
     private val _keywords = MutableLiveData<List<Keyword>>()
     val keywords: LiveData<List<Keyword>>
         get() = _keywords
@@ -26,14 +28,14 @@ class KeywordViewModel(
     }
 
     private suspend fun loadKeywords() {
-        repository.getKeywords().collect {
+        keywordRepository.getKeywords().collect {
             _keywords.postValue(it)
         }
     }
 
     fun upsert(keyword: Keyword) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.upsert(keyword).collect {
+            keywordRepository.upsert(keyword).collect {
                 loadKeywords()
             }
         }
@@ -41,8 +43,17 @@ class KeywordViewModel(
 
     fun delete(keyword: Keyword) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.delete(keyword).collect {
+            keywordRepository.delete(keyword).collect {
                 loadKeywords()
+            }
+        }
+    }
+
+    companion object {
+        val Factory: ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                val keywordRepository = (this[APPLICATION_KEY] as MapApplication).keywordRepository
+                KeywordViewModel(keywordRepository)
             }
         }
     }
