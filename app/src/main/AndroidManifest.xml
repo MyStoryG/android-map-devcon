@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <application
+        android:name="devcon.map.MapApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -12,9 +13,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyMap"
         tools:targetApi="31">
+
         <activity
             android:name="devcon.map.MainActivity"
             android:exported="true">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -22,5 +25,4 @@
             </intent-filter>
         </activity>
     </application>
-
 </manifest>
