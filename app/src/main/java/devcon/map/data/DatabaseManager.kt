@@ -2,6 +2,7 @@ package devcon.map.data
 
 import android.content.ContentValues
 import android.content.Context
+import android.provider.BaseColumns
 import android.util.Log
 
 object DatabaseManager {
@@ -44,6 +45,26 @@ object DatabaseManager {
         }
 
         return newRowId
+    }
+
+    fun getCafesByTitle(title: String): List<CafeDTO> {
+        val db = dbHelper.readableDatabase
+        val cafes = mutableListOf<CafeDTO>()
+        val query = "SELECT * FROM ${CafeContract.CafeEntry.TABLE_NAME} WHERE ${CafeContract.CafeEntry.COLUMN_NAME_TITLE} LIKE ?"
+        val cursor = db.rawQuery(query, arrayOf("%$title%"))
+        Log.d("DB", "Rows returned: ${cursor.count}")
+
+        with(cursor) {
+            while (moveToNext()) {
+                val id = getLong(getColumnIndexOrThrow(BaseColumns._ID))
+                val address = getString(getColumnIndexOrThrow(CafeContract.CafeEntry.COLUMN_NAME_ADDRESS))
+                cafes.add(CafeDTO(id, title, address))
+            }
+            close()
+        }
+
+        db.close()
+        return cafes
     }
 }
 
