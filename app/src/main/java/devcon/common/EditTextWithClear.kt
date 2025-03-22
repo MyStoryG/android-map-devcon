@@ -17,7 +17,6 @@ class EditTextWithClear
         attrs: AttributeSet? = null,
         defStyleAttr: Int = android.R.attr.editTextStyle,
     ) : AppCompatEditText(context, attrs, defStyleAttr) {
-        // 클리어 아이콘 Drawable
         private var clearDrawable: Drawable? =
             ContextCompat.getDrawable(context, R.drawable.ic_clear)
 

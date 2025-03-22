@@ -41,7 +41,6 @@ class SearchWordAdapter(
         parent: ViewGroup,
         viewType: Int,
     ): SearchWordHolder {
-        // MaterialButton을 프로그래밍 방식으로 생성합니다.
         val view =
             LayoutInflater.from(parent.context).inflate(
                 R.layout.search_word_item,
