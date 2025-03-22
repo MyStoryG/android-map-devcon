@@ -5,6 +5,7 @@
    - SQLite를 이용한 DB 구현
 
 2. 2차과제
+   - view binding 적용
    - SQLite dummy data 추가
    - SQLite 검색 기능 추가(READ)
    - RecyclerView에 검색결과 노출
