@@ -28,4 +28,17 @@
         app:layout_constraintStart_toStartOf="@id/main_search_edit_text"
         app:layout_constraintTop_toBottomOf="@id/main_search_edit_text" />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/place_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/main_search_edit_text"
+        app:layout_constraintStart_toStartOf="@id/main_search_edit_text"
+        app:layout_constraintTop_toBottomOf="@id/main_search_edit_text"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/place_item"
+        android:visibility="gone"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
