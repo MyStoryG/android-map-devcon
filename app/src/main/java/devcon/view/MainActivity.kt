@@ -70,7 +70,7 @@ class MainActivity : AppCompatActivity() {
             PlaceAdapter(
                 onItemClick = {
                     changeEditText(it.name)
-                    viewModel.onClickPlace(it)
+                    viewModel.onClickPlace(it.name)
                 },
             )
 

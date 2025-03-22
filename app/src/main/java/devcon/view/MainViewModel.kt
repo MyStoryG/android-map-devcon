@@ -47,13 +47,6 @@ class MainViewModel(
         placeObservableData.setValue(placeList)
     }
 
-    fun onClickPlace(place: Place) {
-        searchWordRepository.add(place.name)
-        loadPlaces(place.name)
-
-        notifySearchWordsChange()
-    }
-
     fun onClickPlace(placeName: String) {
         searchWordRepository.add(placeName)
         loadPlaces(placeName)
