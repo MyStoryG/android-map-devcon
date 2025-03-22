@@ -11,12 +11,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import devcon.MapApplication
-import devcon.domain.Place
 import devcon.learn.contacts.R
 
 class MainActivity : AppCompatActivity() {
     private lateinit var viewModel: MainViewModel
     private lateinit var searchEditText: EditText
+    private lateinit var searchWordRecyclerView: RecyclerView
     private lateinit var placeRecyclerView: RecyclerView
     private lateinit var emptyResultTextView: TextView
 
@@ -24,21 +24,52 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val application = (application as MapApplication)
+
         viewModel =
             ViewModelProvider(
                 this,
-                MainViewModelFactory((application as MapApplication).placeRepository),
+                MainViewModelFactory(application.placeRepository, application.searchWordRepository),
             )[MainViewModel::class.java]
 
         initEditText()
-        initListView()
+        initSearchWordView()
+        initPlaceView()
     }
 
-    private fun initListView() {
+    private fun initSearchWordView() {
+        searchWordRecyclerView = findViewById(R.id.search_word_recycler_view)
+        searchWordRecyclerView.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
+
+        val searchWordAdapter =
+            SearchWordAdapter(
+                onItemClick = {
+                    changeEditText(it)
+                    viewModel.onClickPlace(it)
+                },
+                onItemDelete = {
+                    viewModel.onClickDeleteSearchWord(it)
+                },
+            )
+
+        searchWordRecyclerView.adapter = searchWordAdapter
+
+        viewModel.searchWordsObservableData.observe { searchWords ->
+            if (searchWords.isEmpty()) {
+                searchWordRecyclerView.visibility = View.GONE
+            } else {
+                searchWordRecyclerView.visibility = View.VISIBLE
+            }
+
+            searchWordAdapter.submitList(searchWords)
+        }
+    }
+
+    private fun initPlaceView() {
         val placeAdapter =
             PlaceAdapter(
                 onItemClick = {
-                    changeEditText(it)
+                    changeEditText(it.name)
                     viewModel.onClickPlace(it)
                 },
             )
@@ -61,16 +92,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun changeEditText(place: Place) {
-        val placeName = place.name
-
+    private fun changeEditText(placeName: String) {
         searchEditText.setText(placeName)
         searchEditText.setSelection(placeName.length)
     }
 
     private fun initEditText() {
         searchEditText = findViewById(R.id.main_search_edit_text)
-
         searchEditText.addTextChangedListener(
             object : TextWatcher {
                 override fun beforeTextChanged(
