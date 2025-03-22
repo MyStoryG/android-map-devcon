@@ -1,7 +1,6 @@
 package devcon.data
 
 import android.content.ContentValues
-import android.database.Cursor
 import android.provider.BaseColumns
 import devcon.domain.Place
 
@@ -48,26 +47,18 @@ class PlaceRepository(
         }
     }
 
-    fun getPlaceList(): List<Place> {
+    fun searchPlace(searchText: String): List<Place> {
         val placesList = mutableListOf<Place>()
         val db = dbHelper.readableDatabase
 
-        val columns =
-            arrayOf(
-                BaseColumns._ID,
-                PlaceContract.PlaceEntry.COLUMN_NAME,
-                PlaceContract.PlaceEntry.COLUMN_TYPE,
-                PlaceContract.PlaceEntry.COLUMN_ADDRESS,
-                PlaceContract.PlaceEntry.COLUMN_LATITUDE,
-                PlaceContract.PlaceEntry.COLUMN_LONGITUDE,
-            )
-
-        val cursor: Cursor =
+        val selection = "${PlaceContract.PlaceEntry.COLUMN_NAME} LIKE ?"
+        val selectionArgs = arrayOf("%$searchText%")
+        val cursor =
             db.query(
                 PlaceContract.PlaceEntry.TABLE_NAME,
-                columns,
                 null,
-                null,
+                selection,
+                selectionArgs,
                 null,
                 null,
                 null,
@@ -84,8 +75,10 @@ class PlaceRepository(
                 placesList.add(Place(id, name, type, address, latitude, longitude))
             }
         }
+
         cursor.close()
         db.close()
+
         return placesList
     }
 }
