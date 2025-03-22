@@ -17,6 +17,8 @@ import devcon.learn.contacts.R
 class MainActivity : AppCompatActivity() {
     private lateinit var viewModel: MainViewModel
     private lateinit var searchEditText: EditText
+    private lateinit var placeRecyclerView: RecyclerView
+    private lateinit var emptyResultTextView: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,17 +43,18 @@ class MainActivity : AppCompatActivity() {
                 },
             )
 
-        val recyclerView: RecyclerView = findViewById(R.id.place_recycler_view)
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = placeAdapter
+        placeRecyclerView = findViewById(R.id.place_recycler_view)
+        emptyResultTextView = findViewById(R.id.main_empty_result_text_view)
+        placeRecyclerView.layoutManager = LinearLayoutManager(this)
+        placeRecyclerView.adapter = placeAdapter
 
         viewModel.placeObservableData.observe { places ->
             if (places.isEmpty()) {
-                findViewById<TextView>(R.id.main_empty_result_text_view).visibility = View.VISIBLE
-                recyclerView.visibility = View.GONE
+                emptyResultTextView.visibility = View.VISIBLE
+                placeRecyclerView.visibility = View.GONE
             } else {
-                recyclerView.visibility = View.VISIBLE
-                findViewById<TextView>(R.id.main_empty_result_text_view).visibility = View.GONE
+                emptyResultTextView.visibility = View.GONE
+                placeRecyclerView.visibility = View.VISIBLE
             }
 
             placeAdapter.submitList(places)
