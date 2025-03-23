@@ -4,8 +4,10 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import devcon.learn.contacts.databinding.ActivityMainBinding
 import devcon.map.data.repository.CafeRepository
 
@@ -13,12 +15,20 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var mainViewModel: MainViewModel
+    private val mainSearchResultAdapter = MainSearchResultAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        binding.rvSearchResult.apply {
+            layoutManager = LinearLayoutManager(context).apply {
+                orientation = LinearLayoutManager.VERTICAL
+                adapter = mainSearchResultAdapter
+            }
+        }
 
         val cafeRepository = CafeRepository()
         val factory = MainViewModelFactory(repository = cafeRepository)
@@ -38,6 +48,14 @@ class MainActivity : AppCompatActivity() {
 
         mainViewModel.searchResult.observe(this) { cafes ->
             Log.d("hoon92", "cafes = $cafes")
+            if (cafes.isEmpty()) {
+                binding.tvEmptyResult.visibility = View.VISIBLE
+                binding.rvSearchResult.visibility = View.GONE
+            } else {
+                binding.tvEmptyResult.visibility = View.GONE
+                binding.rvSearchResult.visibility = View.VISIBLE
+            }
+            mainSearchResultAdapter.submitList(cafes)
         }
     }
 }
