@@ -20,20 +20,20 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        initView()
+        initViewModel()
+        startObserve()
+    }
+
+    private fun initView() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        val cafeRepository = CafeRepository()
-        val factory = MainViewModelFactory(repository = cafeRepository)
-        mainViewModel = ViewModelProvider(this, factory).get(MainViewModel::class.java)
-
-        mainSearchResultAdapter = MainSearchResultAdapter { cafeTitle ->
-            mainViewModel.addSavedSearch(cafeTitle)
-        }
-
         binding.rvSearchResult.apply {
             layoutManager = LinearLayoutManager(context).apply {
                 orientation = LinearLayoutManager.VERTICAL
+                mainSearchResultAdapter = MainSearchResultAdapter { cafeTitle ->
+                    mainViewModel.addSavedSearch(cafeTitle)
+                }
                 adapter = mainSearchResultAdapter
             }
         }
@@ -49,7 +49,15 @@ class MainActivity : AppCompatActivity() {
                 mainViewModel.runSearchTitle(p0.toString())
             }
         })
+    }
 
+    private fun initViewModel() {
+        val cafeRepository = CafeRepository()
+        val factory = MainViewModelFactory(repository = cafeRepository)
+        mainViewModel = ViewModelProvider(this, factory).get(MainViewModel::class.java)
+    }
+
+    private fun startObserve() {
         mainViewModel.searchResult.observe(this) { cafes ->
             Log.d("hoon92", "cafes = $cafes")
             if (cafes.isEmpty()) {
