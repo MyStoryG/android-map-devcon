@@ -1,4 +1,4 @@
-package devcon.map.view
+package devcon.map.ui.main
 
 import android.os.Bundle
 import android.text.Editable
