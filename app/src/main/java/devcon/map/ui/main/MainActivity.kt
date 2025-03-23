@@ -44,6 +44,7 @@ class MainActivity : AppCompatActivity() {
             layoutManager = LinearLayoutManager(context).apply {
                 orientation = LinearLayoutManager.HORIZONTAL
                 mainSearchSavedAdapter = MainSearchSavedAdapter { cafeTitle ->
+                    mainViewModel.removeSavedSearch(cafeTitle)
                 }
                 adapter = mainSearchSavedAdapter
             }

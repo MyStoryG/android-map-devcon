@@ -28,4 +28,14 @@ class MainViewModel(private val cafeRepository: CafeRepository) : ViewModel() {
         _savedSearch.value = updatedSet
     }
 
+    fun removeSavedSearch(title: String) {
+        val currentSet = _savedSearch.value ?: emptySet()
+
+        val updatedSet = currentSet.toMutableSet().apply {
+            remove(title)
+        }
+
+        _savedSearch.value = updatedSet
+    }
+
 }

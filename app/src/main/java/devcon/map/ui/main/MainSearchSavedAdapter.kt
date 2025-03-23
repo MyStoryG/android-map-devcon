@@ -53,7 +53,7 @@ class MainSearchSavedAdapter(
 
         fun bind(item: String) {
             binding.tvTitle.text = item
-            binding.root.setOnClickListener {
+            binding.ivClear.setOnClickListener {
                 onItemClick(item)
             }
         }
