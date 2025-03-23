@@ -8,7 +8,9 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import devcon.learn.contacts.databinding.ItemSearchResultBinding
 import devcon.map.data.model.CafeDTO
 
-class MainSearchResultAdapter() :
+class MainSearchResultAdapter(
+    private val onItemClick: (String) -> Unit
+) :
     ListAdapter<CafeDTO, MainSearchResultAdapter.MainSearchResultAdapterHolder>(
         DiffCallback
     ) {
@@ -55,6 +57,9 @@ class MainSearchResultAdapter() :
         fun bind(item: CafeDTO) {
             binding.tvTitle.text = item.title
             binding.tvAddress.text = item.address
+            binding.root.setOnClickListener {
+                onItemClick(item.title)
+            }
         }
     }
 }

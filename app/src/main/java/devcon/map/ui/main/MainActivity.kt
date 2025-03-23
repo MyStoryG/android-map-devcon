@@ -15,7 +15,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var mainViewModel: MainViewModel
-    private val mainSearchResultAdapter = MainSearchResultAdapter()
+    private lateinit var mainSearchResultAdapter: MainSearchResultAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,16 +23,20 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val cafeRepository = CafeRepository()
+        val factory = MainViewModelFactory(repository = cafeRepository)
+        mainViewModel = ViewModelProvider(this, factory).get(MainViewModel::class.java)
+
+        mainSearchResultAdapter = MainSearchResultAdapter { cafeTitle ->
+            mainViewModel.addSavedSearch(cafeTitle)
+        }
+
         binding.rvSearchResult.apply {
             layoutManager = LinearLayoutManager(context).apply {
                 orientation = LinearLayoutManager.VERTICAL
                 adapter = mainSearchResultAdapter
             }
         }
-
-        val cafeRepository = CafeRepository()
-        val factory = MainViewModelFactory(repository = cafeRepository)
-        mainViewModel = ViewModelProvider(this, factory).get(MainViewModel::class.java)
 
         binding.etSearch.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -56,6 +60,10 @@ class MainActivity : AppCompatActivity() {
                 binding.rvSearchResult.visibility = View.VISIBLE
             }
             mainSearchResultAdapter.submitList(cafes)
+        }
+
+        mainViewModel.savedSearch.observe(this) {
+            Log.d("hoon92", "item List = ${it.toString()}")
         }
     }
 }
