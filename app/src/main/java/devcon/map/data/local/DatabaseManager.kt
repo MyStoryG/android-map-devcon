@@ -49,17 +49,24 @@ object DatabaseManager {
     }
 
     fun getCafesByTitle(title: String): List<CafeDTO> {
+        if (title.isBlank()) {
+            return emptyList()
+        }
+
         val db = dbHelper.readableDatabase
         val cafes = mutableListOf<CafeDTO>()
+
         val query = "SELECT * FROM ${CafeContract.CafeEntry.TABLE_NAME} WHERE ${CafeContract.CafeEntry.COLUMN_NAME_TITLE} LIKE ?"
         val cursor = db.rawQuery(query, arrayOf("%$title%"))
+
         Log.d("DB", "Rows returned: ${cursor.count}")
 
         with(cursor) {
             while (moveToNext()) {
                 val id = getLong(getColumnIndexOrThrow(BaseColumns._ID))
                 val address = getString(getColumnIndexOrThrow(CafeContract.CafeEntry.COLUMN_NAME_ADDRESS))
-                cafes.add(CafeDTO(id, title, address))
+                val originalTitle = getString(getColumnIndexOrThrow(CafeContract.CafeEntry.COLUMN_NAME_TITLE))
+                cafes.add(CafeDTO(id, originalTitle, address))
             }
             close()
         }
