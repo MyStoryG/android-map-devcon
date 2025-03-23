@@ -1,5 +1,6 @@
 package devcon.map.ui.main
 
+import MainSearchSavedAdapter
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -16,6 +17,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var mainViewModel: MainViewModel
     private lateinit var mainSearchResultAdapter: MainSearchResultAdapter
+    private lateinit var mainSearchSavedAdapter: MainSearchSavedAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,6 +37,15 @@ class MainActivity : AppCompatActivity() {
                     mainViewModel.addSavedSearch(cafeTitle)
                 }
                 adapter = mainSearchResultAdapter
+            }
+        }
+
+        binding.rvSavedCafe.apply {
+            layoutManager = LinearLayoutManager(context).apply {
+                orientation = LinearLayoutManager.HORIZONTAL
+                mainSearchSavedAdapter = MainSearchSavedAdapter { cafeTitle ->
+                }
+                adapter = mainSearchSavedAdapter
             }
         }
 
@@ -70,8 +81,14 @@ class MainActivity : AppCompatActivity() {
             mainSearchResultAdapter.submitList(cafes)
         }
 
-        mainViewModel.savedSearch.observe(this) {
-            Log.d("hoon92", "item List = ${it.toString()}")
+        mainViewModel.savedSearch.observe(this) { cafe ->
+            if (cafe.isEmpty()) {
+                binding.rvSavedCafe.visibility = View.GONE
+            } else {
+                binding.rvSavedCafe.visibility = View.VISIBLE
+            }
+
+            mainSearchSavedAdapter.submitList(cafe.toList())
         }
     }
 }
