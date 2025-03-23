@@ -1,4 +1,4 @@
-package devcon.map.data
+package devcon.map.data.local
 
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase

@@ -3,7 +3,7 @@ package devcon.map.ui.main
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import devcon.map.data.CafeDTO
+import devcon.map.data.model.CafeDTO
 
 class MainViewModel : ViewModel() {
 

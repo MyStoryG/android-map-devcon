@@ -1,4 +1,4 @@
-package devcon.map.data
+package devcon.map.data.model
 
 data class CafeDTO(
     val id: Long = 0,

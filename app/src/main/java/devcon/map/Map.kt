@@ -1,7 +1,7 @@
 package devcon.map
 
 import android.app.Application
-import devcon.map.data.DatabaseManager
+import devcon.map.data.local.DatabaseManager
 
 class Map : Application() {
     override fun onCreate() {

@@ -3,11 +3,9 @@ package devcon.map.ui.main
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import devcon.learn.contacts.databinding.ActivityMainBinding
-import devcon.map.data.DatabaseManager
 
 class MainActivity : AppCompatActivity() {
 

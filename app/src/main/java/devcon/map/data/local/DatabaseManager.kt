@@ -1,9 +1,10 @@
-package devcon.map.data
+package devcon.map.data.local
 
 import android.content.ContentValues
 import android.content.Context
 import android.provider.BaseColumns
 import android.util.Log
+import devcon.map.data.model.CafeDTO
 
 object DatabaseManager {
 

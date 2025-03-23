@@ -1,4 +1,4 @@
-package devcon.map.data
+package devcon.map.data.local
 
 import android.provider.BaseColumns
 
