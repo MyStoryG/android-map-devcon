@@ -7,19 +7,24 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.DividerItemDecoration
 import devcon.learn.contacts.R
 import devcon.learn.contacts.databinding.ActivityMainBinding
 import devcon.map.model.Keyword
 import devcon.map.ui.HorizontalSpaceDecoration
 import devcon.map.ui.KeywordAdapter
 import devcon.map.ui.KeywordViewModel
+import devcon.map.ui.PlaceAdapter
+import devcon.map.ui.PlaceViewModel
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
     private val keywordViewModel by viewModels<KeywordViewModel> { KeywordViewModel.Factory }
+    private val placeViewModel by viewModels<PlaceViewModel> { PlaceViewModel.Factory }
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var keywordAdapter: KeywordAdapter
+    private lateinit var placeAdapter: PlaceAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,11 +37,23 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupUI() {
-        initializeRecyclerView()
+        initializeKeywordRecyclerView()
+        initializePlaceRecyclerView()
         initializeEditText()
     }
 
     private fun updateUI() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                placeViewModel.uiState.collect { uiState ->
+                    placeAdapter.submitList(uiState.places)
+
+                    binding.textviewNoMatchResults.visibility =
+                        if (uiState.isEmpty) View.VISIBLE else View.GONE
+                }
+            }
+        }
+
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 keywordViewModel.uiState.collect { uiState ->
@@ -48,7 +65,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun initializeRecyclerView() {
+    private fun initializeKeywordRecyclerView() {
         keywordAdapter = KeywordAdapter { keyword -> keywordViewModel.delete(keyword) }
 
         binding.recyclerviewKeyword.apply {
@@ -57,6 +74,16 @@ class MainActivity : AppCompatActivity() {
             val margin = resources.getDimension(R.dimen.margin_medium)
             val padding = resources.getDimension(R.dimen.padding_extra_small)
             addItemDecoration(HorizontalSpaceDecoration(padding, padding, margin, margin))
+        }
+    }
+
+    private fun initializePlaceRecyclerView() {
+        placeAdapter = PlaceAdapter { place -> keywordViewModel.upsert(Keyword(word = place.name)) }
+
+        binding.recyclerviewPlace.apply {
+            adapter = placeAdapter
+
+            addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
         }
     }
 
