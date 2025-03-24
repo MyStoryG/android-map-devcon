@@ -30,12 +30,8 @@ class PlaceDao(private val database: SQLiteDatabase) {
         val whereClause = "${PlaceEntry.COLUMN_NAME} = ? AND ${PlaceEntry.COLUMN_ADDRESS} = ?"
         val whereArgs = arrayOf(place.name, place.address)
 
-        val updatedRows = database.update(
-            PlaceEntry.TABLE_NAME,
-            values,
-            whereClause,
-            whereArgs
-        )
+        val updatedRows = database
+            .update(PlaceEntry.TABLE_NAME, values, whereClause, whereArgs)
 
         if (updatedRows == 0) {
             insert(place)
@@ -62,7 +58,7 @@ class PlaceDao(private val database: SQLiteDatabase) {
             selectionArgs,
             null,
             null,
-            null
+            null,
         ).use { cursor ->
             with(cursor) {
                 while (moveToNext()) {

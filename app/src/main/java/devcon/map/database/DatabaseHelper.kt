@@ -8,20 +8,28 @@ import devcon.map.database.KeywordContract.KeywordEntry
 import devcon.map.database.PlaceContract.PlaceEntry
 
 class DatabaseHelper(
-    context: Context
+    context: Context,
 ) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(SQL_CREATE_KEYWORD_TABLE)
         db.execSQL(SQL_CREATE_PLACE_TABLE)
     }
 
-    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
+    override fun onUpgrade(
+        db: SQLiteDatabase,
+        oldVersion: Int,
+        newVersion: Int,
+    ) {
         db.execSQL(SQL_DELETE_KEYWORD_TABLE)
         db.execSQL(SQL_DELETE_PLACE_TABLE)
         onCreate(db)
     }
 
-    override fun onDowngrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
+    override fun onDowngrade(
+        db: SQLiteDatabase,
+        oldVersion: Int,
+        newVersion: Int,
+    ) {
         onUpgrade(db, oldVersion, newVersion)
     }
 

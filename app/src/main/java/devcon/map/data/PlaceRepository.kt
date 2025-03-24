@@ -8,9 +8,7 @@ import kotlinx.coroutines.flow.flow
 class PlaceRepository(
     private val placeDao: PlaceDao,
 ) {
-    fun insertAll(places: List<Place>): Flow<List<Place>> =
-        flow { emit(placeDao.insertAll(places)) }
+    fun insertAll(places: List<Place>): Flow<List<Place>> = flow { emit(placeDao.insertAll(places)) }
 
-    fun getPlacesByName(value: String): Flow<List<Place>> =
-        flow { emit(placeDao.getPlacesByName(value)) }
+    fun getPlacesByName(value: String): Flow<List<Place>> = flow { emit(placeDao.getPlacesByName(value)) }
 }
