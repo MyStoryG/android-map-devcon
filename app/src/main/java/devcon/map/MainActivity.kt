@@ -4,12 +4,16 @@ import android.os.Bundle
 import android.view.KeyEvent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import devcon.learn.contacts.R
 import devcon.learn.contacts.databinding.ActivityMainBinding
 import devcon.map.model.Keyword
 import devcon.map.ui.HorizontalSpaceDecoration
 import devcon.map.ui.KeywordAdapter
 import devcon.map.ui.KeywordViewModel
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
     private val keywordViewModel by viewModels<KeywordViewModel> { KeywordViewModel.Factory }
@@ -24,7 +28,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setupUI()
-        observeViewModel()
+        updateUI()
     }
 
     private fun setupUI() {
@@ -32,9 +36,15 @@ class MainActivity : AppCompatActivity() {
         initializeEditText()
     }
 
-    private fun observeViewModel() {
-        keywordViewModel.keywords.observe(this) { keywords ->
-            keywordAdapter.submitList(keywords)
+    private fun updateUI() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                keywordViewModel.uiState.collect { uiState ->
+                    keywordAdapter.submitList(uiState.keywords)
+                    binding.recyclerviewKeyword.visibility =
+                        if (uiState.isEmpty) View.GONE else View.VISIBLE
+                }
+            }
         }
     }
 
