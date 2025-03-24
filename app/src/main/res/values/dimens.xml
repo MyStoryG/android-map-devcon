@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="padding_extra_small">4dp</dimen>
+    <dimen name="padding_small">8dp</dimen>
+    <dimen name="padding_medium">12dp</dimen>
+    <dimen name="padding_large">16dp</dimen>
+    <dimen name="padding_extra_large">24dp</dimen>
+
+    <dimen name="margin_extra_small">4dp</dimen>
+    <dimen name="margin_small">8dp</dimen>
+    <dimen name="margin_medium">12dp</dimen>
+    <dimen name="margin_large">16dp</dimen>
+    <dimen name="margin_extra_large">24dp</dimen>
+
+    <dimen name="width_small">40dp</dimen>
+    <dimen name="width_medium">48dp</dimen>
+    <dimen name="width_large">56dp</dimen>
+
+    <dimen name="height_small">40dp</dimen>
+    <dimen name="height_medium">48dp</dimen>
+    <dimen name="height_large">56dp</dimen>
+
+    <dimen name="icon_size_small">16dp</dimen>
+    <dimen name="icon_size_medium">24dp</dimen>
+    <dimen name="icon_size_large">48dp</dimen>
+
+    <dimen name="corner_radius_small">4dp</dimen>
+    <dimen name="corner_radius_medium">8dp</dimen>
+    <dimen name="corner_radius_large">12dp</dimen>
+</resources>
