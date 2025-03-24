@@ -1,9 +1,10 @@
 package devcon.map
 
 import android.os.Bundle
-import android.view.KeyEvent
+import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -88,20 +89,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initializeEditText() {
-        binding.edittextSearch.setOnKeyListener { _, keyCode, keyEvent ->
-            val isKeyCodeEnter = keyCode == KeyEvent.KEYCODE_ENTER
-            val isActionDown = keyEvent.action == KeyEvent.ACTION_DOWN
-
-            if (isKeyCodeEnter && isActionDown) {
-                val keyword = binding.edittextSearch.text?.toString()
-                if (!keyword.isNullOrBlank()) {
-                    keywordViewModel.upsert(Keyword(word = keyword))
-                }
-
-                binding.edittextSearch.text?.clear()
-            }
-
-            isKeyCodeEnter && isActionDown
+        binding.edittextSearch.addTextChangedListener { text ->
+            placeViewModel.getPlacesByName(text.toString())
         }
     }
 }
