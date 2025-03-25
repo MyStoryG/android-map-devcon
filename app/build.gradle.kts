@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "devcon.learn.contacts"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "devcon.learn.kakao.contacts"
@@ -27,6 +27,9 @@ android {
             )
         }
     }
+    buildFeatures {
+        viewBinding = true
+    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
@@ -37,6 +40,7 @@ android {
 }
 
 dependencies {
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.8.7")
 
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
