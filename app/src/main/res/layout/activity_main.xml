@@ -35,13 +35,23 @@
         tools:listitem="@layout/item_keyword"
         tools:paddingStart="@dimen/padding_medium" />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerview_place"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/recyclerview_keyword"
+        tools:listitem="@layout/item_place" />
+
     <TextView
         android:id="@+id/textview_no_match_results"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/text_no_match_results"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/recyclerview_place"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/text_input_layout_search" />
+        app:layout_constraintTop_toTopOf="@id/recyclerview_place" />
 </androidx.constraintlayout.widget.ConstraintLayout>

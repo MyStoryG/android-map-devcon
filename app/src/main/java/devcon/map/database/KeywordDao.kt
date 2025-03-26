@@ -27,12 +27,8 @@ class KeywordDao(
         val whereClause = "${KeywordEntry.COLUMN_WORD} = ?"
         val whereArgs = arrayOf(keyword.word)
 
-        val updatedRows = database.update(
-            KeywordEntry.TABLE_NAME,
-            values,
-            whereClause,
-            whereArgs
-        )
+        val updatedRows = database
+            .update(KeywordEntry.TABLE_NAME, values, whereClause, whereArgs)
 
         if (updatedRows == 0) {
             insert(keyword)
@@ -50,7 +46,7 @@ class KeywordDao(
             null,
             null,
             null,
-            orderBy
+            orderBy,
         ).use { cursor ->
             with(cursor) {
                 while (moveToNext()) {
