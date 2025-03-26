@@ -1,3 +1,5 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -16,9 +18,12 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "KAKAO_NATIVE_APP_KEY", getLocalProperty("KAKAO_NATIVE_APP_KEY"))
     }
 
     buildFeatures {
+        buildConfig = true
         viewBinding = true
     }
 
@@ -61,4 +66,8 @@ dependencies {
     implementation("com.kakao.maps.open:android:2.12.13")
     // Junit
     testImplementation("junit:junit:4.13.2")
+}
+
+fun getLocalProperty(key: String): String {
+    return gradleLocalProperties(rootDir, providers).getProperty(key)
 }
