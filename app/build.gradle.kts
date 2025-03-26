@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "devcon.learn.contacts"
+    namespace = "devcon.map"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "devcon.learn.kakao.contacts"
+        applicationId = "devcon.map"
         minSdk = 26
         targetSdk = 34
         versionCode = 1

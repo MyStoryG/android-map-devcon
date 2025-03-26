@@ -9,8 +9,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.DividerItemDecoration
-import devcon.learn.contacts.R
-import devcon.learn.contacts.databinding.ActivityMainBinding
+import devcon.map.databinding.ActivityMainBinding
 import devcon.map.model.Keyword
 import devcon.map.ui.HorizontalSpaceDecoration
 import devcon.map.ui.KeywordAdapter
