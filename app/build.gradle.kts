@@ -64,6 +64,10 @@ dependencies {
     // Kakao
     implementation("com.kakao.sdk:v2-common:2.21.0")
     implementation("com.kakao.maps.open:android:2.12.13")
+    // Square
+    implementation("com.squareup.retrofit2:retrofit:2.11.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
     // Junit
     testImplementation("junit:junit:4.13.2")
 }
