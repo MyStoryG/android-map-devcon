@@ -13,14 +13,12 @@ import devcon.map.databinding.ActivityMainBinding
 import devcon.map.model.Keyword
 import devcon.map.ui.HorizontalSpaceDecoration
 import devcon.map.ui.KeywordAdapter
-import devcon.map.ui.KeywordViewModel
 import devcon.map.ui.PlaceAdapter
-import devcon.map.ui.PlaceViewModel
+import devcon.map.ui.SearchViewModel
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
-    private val keywordViewModel by viewModels<KeywordViewModel> { KeywordViewModel.Factory }
-    private val placeViewModel by viewModels<PlaceViewModel> { PlaceViewModel.Factory }
+    private val searchViewModel by viewModels<SearchViewModel> { SearchViewModel.Factory }
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var keywordAdapter: KeywordAdapter
@@ -45,28 +43,21 @@ class MainActivity : AppCompatActivity() {
     private fun updateUI() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                placeViewModel.uiState.collect { uiState ->
-                    placeAdapter.submitList(uiState.places)
-
-                    binding.textviewNoMatchResults.visibility =
-                        if (uiState.isEmpty) View.VISIBLE else View.GONE
-                }
-            }
-        }
-
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                keywordViewModel.uiState.collect { uiState ->
+                searchViewModel.uiState.collect { uiState ->
                     keywordAdapter.submitList(uiState.keywords)
                     binding.recyclerviewKeyword.visibility =
-                        if (uiState.isEmpty) View.GONE else View.VISIBLE
+                        if (uiState.keywords.isEmpty()) View.GONE else View.VISIBLE
+
+                    placeAdapter.submitList(uiState.places)
+                    binding.textviewNoMatchResults.visibility =
+                        if (uiState.places.isEmpty()) View.VISIBLE else View.GONE
                 }
             }
         }
     }
 
     private fun initializeKeywordRecyclerView() {
-        keywordAdapter = KeywordAdapter { keyword -> keywordViewModel.delete(keyword) }
+        keywordAdapter = KeywordAdapter { keyword -> searchViewModel.deleteKeyword(keyword) }
 
         binding.recyclerviewKeyword.apply {
             adapter = keywordAdapter
@@ -78,7 +69,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initializePlaceRecyclerView() {
-        placeAdapter = PlaceAdapter { place -> keywordViewModel.upsert(Keyword(word = place.name)) }
+        placeAdapter = PlaceAdapter { place ->
+            searchViewModel.searchKeyword(Keyword(word = place.name))
+        }
 
         binding.recyclerviewPlace.apply {
             adapter = placeAdapter
@@ -89,7 +82,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun initializeEditText() {
         binding.edittextSearch.addTextChangedListener { text ->
-            placeViewModel.getPlacesByName(text.toString())
+            // TODO: Debounce
+            searchViewModel.getSearchKeyword(1, 15, text.toString())
         }
     }
 }

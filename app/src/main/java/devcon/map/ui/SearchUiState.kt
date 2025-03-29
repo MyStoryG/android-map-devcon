@@ -1,8 +1,9 @@
 package devcon.map.ui
 
 import devcon.map.model.Keyword
+import devcon.map.model.Place
 
-data class KeywordUiState(
+data class SearchUiState(
     val keywords: List<Keyword> = emptyList(),
-    val isEmpty: Boolean = true,
+    val places: List<Place> = emptyList(),
 )
