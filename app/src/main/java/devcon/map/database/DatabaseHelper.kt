@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper
 import android.provider.BaseColumns
 import devcon.map.database.KeywordContract.KeywordEntry
 import devcon.map.database.PlaceContract.PlaceEntry
+import devcon.map.database.dao.KeywordDao
 
 class DatabaseHelper(
     context: Context,
@@ -31,6 +32,10 @@ class DatabaseHelper(
         newVersion: Int,
     ) {
         onUpgrade(db, oldVersion, newVersion)
+    }
+
+    fun provideKeywordDao(): KeywordDao {
+        return KeywordDao(writableDatabase)
     }
 
     companion object {
