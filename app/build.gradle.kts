@@ -1,3 +1,6 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -6,7 +9,7 @@ plugins {
 
 android {
     namespace = "devcon.learn.contacts"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "devcon.learn.kakao.contacts"
@@ -14,7 +17,6 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -25,18 +27,35 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            val localProperties = Properties()
+            localProperties.load(FileInputStream(rootProject.file("local.properties")))
+            buildConfigField("String", "API_KEY", localProperties["REST_API_KEY"].toString())
+            buildConfigField("String", "APP_KEY", localProperties["APP_KEY"].toString())
+        }
+        debug {
+            val localProperties = Properties()
+            localProperties.load(FileInputStream(rootProject.file("local.properties")))
+            buildConfigField("String", "API_KEY", localProperties["REST_API_KEY"].toString())
+            buildConfigField("String", "APP_KEY", localProperties["APP_KEY"].toString())
         }
     }
+    buildFeatures {
+        viewBinding = true
+        buildConfig = true
+    }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
     kotlinOptions {
-        jvmTarget = "17"
+        jvmTarget = "1.8"
     }
 }
 
 dependencies {
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.8.7")
+    implementation("com.kakao.maps.open:android:2.12.8")
+    implementation("com.kakao.sdk:v2-user:2.21.0")
 
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
