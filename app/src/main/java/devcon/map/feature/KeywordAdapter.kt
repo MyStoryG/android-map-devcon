@@ -1,4 +1,4 @@
-package devcon.map.ui
+package devcon.map.feature
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.DiffUtil.ItemCallback
 import androidx.recyclerview.widget.ListAdapter
 import devcon.map.databinding.ItemKeywordBinding
 import devcon.map.model.Keyword
+import devcon.map.ui.BaseViewHolder
 
 class KeywordAdapter(
     private val onItemDelete: (Keyword) -> Unit,

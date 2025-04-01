@@ -15,9 +15,6 @@ import devcon.map.R
 import devcon.map.databinding.ActivitySearchBinding
 import devcon.map.model.Keyword
 import devcon.map.ui.HorizontalSpaceDecoration
-import devcon.map.ui.KeywordAdapter
-import devcon.map.ui.PlaceAdapter
-import devcon.map.ui.SearchViewModel
 import kotlinx.coroutines.launch
 
 class SearchActivity : AppCompatActivity() {
