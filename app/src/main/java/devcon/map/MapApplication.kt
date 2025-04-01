@@ -1,24 +1,29 @@
 package devcon.map
 
 import android.app.Application
-import devcon.map.data.KeywordRepository
-import devcon.map.data.PlaceRepository
+import com.kakao.sdk.common.KakaoSdk
+import devcon.map.data.repository.SearchRepository
+import devcon.map.data.source.local.SearchLocalDataSource
+import devcon.map.data.source.remote.SearchRemoteDataSource
 import devcon.map.database.DatabaseHelper
-import devcon.map.database.KeywordDao
-import devcon.map.database.PlaceDao
+import devcon.map.network.RetrofitNetworkFactory
 
 class MapApplication : Application() {
-    lateinit var keywordRepository: KeywordRepository
-    lateinit var placeRepository: PlaceRepository
+    lateinit var searchRepository: SearchRepository
 
     override fun onCreate() {
         super.onCreate()
 
+        setupKakaoSdk()
         val databaseHelper = DatabaseHelper(this)
-        val keywordDao = KeywordDao(databaseHelper.writableDatabase)
-        val placeDao = PlaceDao(databaseHelper.writableDatabase)
 
-        keywordRepository = KeywordRepository(keywordDao)
-        placeRepository = PlaceRepository(placeDao)
+        searchRepository = SearchRepository(
+            SearchLocalDataSource(databaseHelper.provideKeywordDao()),
+            SearchRemoteDataSource(RetrofitNetworkFactory.provideKakaoMapApi()),
+        )
+    }
+
+    private fun setupKakaoSdk() {
+        KakaoSdk.init(this, BuildConfig.KAKAO_NATIVE_APP_KEY)
     }
 }

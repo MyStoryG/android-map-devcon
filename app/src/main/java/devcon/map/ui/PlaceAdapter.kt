@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil.ItemCallback
 import androidx.recyclerview.widget.ListAdapter
-import devcon.learn.contacts.databinding.ItemPlaceBinding
+import devcon.map.databinding.ItemPlaceBinding
 import devcon.map.model.Place
 
 class PlaceAdapter(

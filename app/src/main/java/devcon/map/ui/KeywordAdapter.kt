@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil.ItemCallback
 import androidx.recyclerview.widget.ListAdapter
-import devcon.learn.contacts.databinding.ItemKeywordBinding
+import devcon.map.databinding.ItemKeywordBinding
 import devcon.map.model.Keyword
 
 class KeywordAdapter(

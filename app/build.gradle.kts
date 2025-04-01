@@ -1,3 +1,5 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -5,20 +7,24 @@ plugins {
 }
 
 android {
-    namespace = "devcon.learn.contacts"
+    namespace = "devcon.map"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "devcon.learn.kakao.contacts"
+        applicationId = "devcon.map"
         minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "KAKAO_NATIVE_APP_KEY", getLocalProperty("KAKAO_NATIVE_APP_KEY"))
+        buildConfigField("String", "KAKAO_REST_API_KEY", getLocalProperty("KAKAO_REST_API_KEY"))
     }
 
     buildFeatures {
+        buildConfig = true
         viewBinding = true
     }
 
@@ -56,6 +62,17 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     // Google Material
     implementation("com.google.android.material:material:1.11.0")
+    // Kakao
+    implementation("com.kakao.sdk:v2-common:2.21.0")
+    implementation("com.kakao.maps.open:android:2.12.13")
+    // Square
+    implementation("com.squareup.retrofit2:retrofit:2.11.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
     // Junit
     testImplementation("junit:junit:4.13.2")
+}
+
+fun getLocalProperty(key: String): String {
+    return gradleLocalProperties(rootDir, providers).getProperty(key)
 }
