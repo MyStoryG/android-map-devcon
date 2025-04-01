@@ -5,37 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerview_keyword"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/height_medium"
-        android:layout_marginTop="@dimen/margin_small"
-        android:orientation="horizontal"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintTop_toBottomOf="@id/text_input_layout_search"
-        tools:listitem="@layout/item_keyword"
-        tools:paddingStart="@dimen/padding_medium" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerview_place"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:orientation="vertical"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/recyclerview_keyword"
-        tools:listitem="@layout/item_place" />
-
-    <TextView
-        android:id="@+id/textview_no_match_results"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/text_no_match_results"
-        app:layout_constraintBottom_toBottomOf="@id/recyclerview_place"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/recyclerview_place" />
-
     <com.kakao.vectormap.MapView
         android:id="@+id/mapview"
         android:layout_width="match_parent"
@@ -47,7 +16,7 @@
         style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/margin_small"
+        android:layout_margin="@dimen/margin_large"
         app:boxBackgroundColor="@color/white"
         app:endIconDrawable="@drawable/icon_close"
         app:endIconMode="clear_text"
@@ -59,6 +28,9 @@
             android:id="@+id/edittext_search"
             android:layout_width="match_parent"
             android:layout_height="@dimen/height_large"
+            android:cursorVisible="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
             android:hint="@string/hint_search"
             android:inputType="text" />
     </com.google.android.material.textfield.TextInputLayout>
