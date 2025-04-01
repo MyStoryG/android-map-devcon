@@ -5,25 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/text_input_layout_search"
-        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/margin_small"
-        android:hint="@string/hint_search"
-        app:endIconDrawable="@drawable/icon_close"
-        app:endIconMode="clear_text"
-        app:layout_constraintTop_toTopOf="parent"
-        app:startIconDrawable="@drawable/icon_search">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edittext_search"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/height_large"
-            android:inputType="text" />
-    </com.google.android.material.textfield.TextInputLayout>
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview_keyword"
         android:layout_width="match_parent"
@@ -54,4 +35,31 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/recyclerview_place" />
+
+    <com.kakao.vectormap.MapView
+        android:id="@+id/mapview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:background="@color/black" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/text_input_layout_search"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_small"
+        app:boxBackgroundColor="@color/white"
+        app:endIconDrawable="@drawable/icon_close"
+        app:endIconMode="clear_text"
+        app:hintEnabled="false"
+        app:layout_constraintTop_toTopOf="parent"
+        app:startIconDrawable="@drawable/icon_search">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edittext_search"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/height_large"
+            android:hint="@string/hint_search"
+            android:inputType="text" />
+    </com.google.android.material.textfield.TextInputLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

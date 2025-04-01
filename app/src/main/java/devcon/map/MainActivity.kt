@@ -9,6 +9,9 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.DividerItemDecoration
+import com.kakao.vectormap.KakaoMap
+import com.kakao.vectormap.KakaoMapReadyCallback
+import com.kakao.vectormap.MapLifeCycleCallback
 import devcon.map.databinding.ActivityMainBinding
 import devcon.map.model.Keyword
 import devcon.map.ui.HorizontalSpaceDecoration
@@ -38,6 +41,7 @@ class MainActivity : AppCompatActivity() {
         initializeKeywordRecyclerView()
         initializePlaceRecyclerView()
         initializeEditText()
+        initializeMapView()
     }
 
     private fun updateUI() {
@@ -85,5 +89,30 @@ class MainActivity : AppCompatActivity() {
             // TODO: Debounce
             searchViewModel.getSearchKeyword(1, 15, text.toString())
         }
+    }
+
+    private fun initializeMapView() {
+        binding.mapview.start(
+            object : MapLifeCycleCallback() {
+                override fun onMapDestroy() {} // NOP
+
+                override fun onMapError(e: Exception) {
+                    // TODO: Error handling
+                }
+            },
+            object : KakaoMapReadyCallback() {
+                override fun onMapReady(kakaoMap: KakaoMap) {} // NOP
+            }
+        )
+    }
+
+    override fun onPause() {
+        super.onPause()
+        binding.mapview.pause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.mapview.resume()
     }
 }
