@@ -8,14 +8,14 @@ import kotlinx.coroutines.withContext
 
 class SearchLocalDataSource(
     private val keywordDao: KeywordDao,
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
+    private val externalDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {
     suspend fun searchKeyword(keyword: Keyword): List<Keyword> =
-        withContext(ioDispatcher) { keywordDao.upsert(keyword) }
+        withContext(externalDispatcher) { keywordDao.upsert(keyword) }
 
     suspend fun fetchKeywords(): List<Keyword> =
-        withContext(ioDispatcher) { keywordDao.getKeywords() }
+        withContext(externalDispatcher) { keywordDao.getKeywords() }
 
     suspend fun deleteKeyword(keyword: Keyword): List<Keyword> =
-        withContext(ioDispatcher) { keywordDao.delete(keyword) }
+        withContext(externalDispatcher) { keywordDao.delete(keyword) }
 }

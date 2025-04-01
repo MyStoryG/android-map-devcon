@@ -9,13 +9,13 @@ import retrofit2.Response
 
 class SearchRemoteDataSource(
     private val kakaoMapApi: KakaoMapApi,
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
+    private val externalDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {
     suspend fun getSearchKeyword(
         page: Int = 1,
         size: Int = 15,
         query: String,
-    ): Response<KakaoMapSearchResponse> = withContext(ioDispatcher) {
+    ): Response<KakaoMapSearchResponse> = withContext(externalDispatcher) {
         kakaoMapApi.getSearchKeyword(page, size, query)
     }
 }
