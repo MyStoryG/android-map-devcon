@@ -33,9 +33,9 @@ class KeywordViewHolder(
     private val onItemDelete: (Keyword) -> Unit,
 ) : BaseViewHolder<Keyword>(binding) {
     override fun onBind(item: Keyword) {
-        binding.apply {
-            textviewKeyword.text = item.word
-            buttonDelete.setOnClickListener { onItemDelete(item) }
+        binding.chipKeyword.apply {
+            text = item.word
+            setOnCloseIconClickListener { onItemDelete(item) }
         }
     }
 }
