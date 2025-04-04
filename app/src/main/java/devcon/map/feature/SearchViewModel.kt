@@ -58,7 +58,14 @@ class SearchViewModel(
             val response = searchRepository.getSearchKeyword(page, size, query)
             if (response.isSuccessful) {
                 val places = response.body()?.documents?.map {
-                    Place(it.id, it.placeName, it.addressName, it.categoryName)
+                    Place(
+                        id = it.id,
+                        name = it.placeName,
+                        address = it.addressName,
+                        category = it.categoryName,
+                        latitude = it.y.toDouble(),
+                        longitude = it.x.toDouble(),
+                    )
                 } ?: emptyList()
 
                 _uiState.update { currentState ->
