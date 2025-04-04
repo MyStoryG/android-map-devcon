@@ -1,4 +1,4 @@
-package devcon.map.ui
+package devcon.map.feature
 
 import devcon.map.model.Keyword
 import devcon.map.model.Place

@@ -1,7 +1,7 @@
 package devcon.map
 
 import android.app.Application
-import com.kakao.sdk.common.KakaoSdk
+import com.kakao.vectormap.KakaoMapSdk
 import devcon.map.data.repository.SearchRepository
 import devcon.map.data.source.local.SearchLocalDataSource
 import devcon.map.data.source.remote.SearchRemoteDataSource
@@ -24,6 +24,6 @@ class MapApplication : Application() {
     }
 
     private fun setupKakaoSdk() {
-        KakaoSdk.init(this, BuildConfig.KAKAO_NATIVE_APP_KEY)
+        KakaoMapSdk.init(this, BuildConfig.KAKAO_NATIVE_APP_KEY)
     }
 }

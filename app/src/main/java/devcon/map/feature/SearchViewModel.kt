@@ -1,4 +1,4 @@
-package devcon.map.ui
+package devcon.map.feature
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

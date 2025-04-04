@@ -63,7 +63,6 @@ dependencies {
     // Google Material
     implementation("com.google.android.material:material:1.11.0")
     // Kakao
-    implementation("com.kakao.sdk:v2-common:2.21.0")
     implementation("com.kakao.maps.open:android:2.12.13")
     // Square
     implementation("com.squareup.retrofit2:retrofit:2.11.0")
