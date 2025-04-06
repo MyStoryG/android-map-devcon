@@ -9,6 +9,7 @@ import devcon.map.model.Keyword
 import devcon.map.ui.BaseViewHolder
 
 class KeywordAdapter(
+    private val onItemClick: (Keyword) -> Unit,
     private val onItemDelete: (Keyword) -> Unit,
 ) : ListAdapter<Keyword, KeywordViewHolder>(KeywordDiffCallback()) {
     override fun onCreateViewHolder(
@@ -17,7 +18,7 @@ class KeywordAdapter(
     ): KeywordViewHolder {
         val binding = ItemKeywordBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
-        return KeywordViewHolder(binding, onItemDelete)
+        return KeywordViewHolder(binding, onItemClick, onItemDelete)
     }
 
     override fun onBindViewHolder(
@@ -30,11 +31,13 @@ class KeywordAdapter(
 
 class KeywordViewHolder(
     private val binding: ItemKeywordBinding,
+    private val onItemClick: (Keyword) -> Unit,
     private val onItemDelete: (Keyword) -> Unit,
 ) : BaseViewHolder<Keyword>(binding) {
     override fun onBind(item: Keyword) {
         binding.chipKeyword.apply {
             text = item.word
+            setOnClickListener { onItemClick(item) }
             setOnCloseIconClickListener { onItemDelete(item) }
         }
     }

@@ -57,7 +57,10 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun initializeKeywordRecyclerView() {
-        keywordAdapter = KeywordAdapter { keyword -> searchViewModel.deleteKeyword(keyword) }
+        keywordAdapter = KeywordAdapter(
+            onItemClick = { keyword -> binding.edittextSearch.setText(keyword.word) },
+            onItemDelete = { keyword -> searchViewModel.deleteKeyword(keyword) },
+        )
 
         binding.recyclerviewKeyword.apply {
             adapter = keywordAdapter
