@@ -1,6 +1,7 @@
 package devcon.map
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -13,6 +14,11 @@ import com.kakao.vectormap.KakaoMapReadyCallback
 import com.kakao.vectormap.LatLng
 import com.kakao.vectormap.MapLifeCycleCallback
 import com.kakao.vectormap.camera.CameraUpdateFactory
+import com.kakao.vectormap.label.LabelOptions
+import com.kakao.vectormap.label.LabelStyle
+import com.kakao.vectormap.label.LabelStyles
+import com.kakao.vectormap.label.LabelTextBuilder
+import com.kakao.vectormap.label.LabelTextStyle
 import devcon.map.databinding.ActivityMainBinding
 import devcon.map.feature.SearchActivity
 import devcon.map.model.Place
@@ -32,6 +38,7 @@ class MainActivity : AppCompatActivity() {
                 result.data?.getParcelableExtra(RESULT_SEARCH_PLACE)
             }?.let { place ->
                 moveKakaoMapCamera(place)
+                showPlaceMarker(place)
                 showPlaceBottomSheet(place)
             }
         }
@@ -40,6 +47,24 @@ class MainActivity : AppCompatActivity() {
     private fun moveKakaoMapCamera(place: Place) {
         val position = LatLng.from(place.latitude, place.longitude)
         kakaoMap.moveCamera(CameraUpdateFactory.newCenterPosition(position, MOVE_ZOOM_LEVEL))
+    }
+
+    private fun showPlaceMarker(place: Place) {
+        kakaoMap.labelManager?.let { labelManager ->
+            val position = LatLng.from(place.latitude, place.longitude)
+            val styles = run {
+                val iconStyle = LabelStyle.from(R.drawable.icon_marker)
+                val textStyle = LabelTextStyle.from(24, Color.WHITE, 4, Color.BLACK)
+
+                labelManager.addLabelStyles(LabelStyles.from(iconStyle.setTextStyles(textStyle)))
+            }
+            val option = LabelOptions.from(position)
+                .setStyles(styles)
+                .setTexts(LabelTextBuilder().setTexts(place.name))
+
+            labelManager.clearAll()
+            labelManager.layer?.addLabel(option)
+        }
     }
 
     private fun showPlaceBottomSheet(place: Place) {
