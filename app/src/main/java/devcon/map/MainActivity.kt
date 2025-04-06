@@ -3,8 +3,10 @@ package devcon.map
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.widget.LinearLayout
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
 import com.kakao.vectormap.MapLifeCycleCallback
@@ -14,6 +16,7 @@ import devcon.map.model.Place
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
 
     private val searchActivityLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult(),
@@ -24,8 +27,15 @@ class MainActivity : AppCompatActivity() {
             } else {
                 result.data?.getParcelableExtra(RESULT_SEARCH_PLACE)
             }?.let { place ->
+                showPlaceBottomSheet(place)
             }
         }
+    }
+
+    private fun showPlaceBottomSheet(place: Place) {
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+        binding.textviewPlaceName.text = place.name
+        binding.textviewPlaceAddress.text = place.address
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,8 +48,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupUI() {
+        initializeBottomSheet()
         initializeEditText()
         initializeMapView()
+    }
+
+    private fun initializeBottomSheet() {
+        bottomSheetBehavior = BottomSheetBehavior.from(binding.standardBottomSheet)
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
     }
 
     private fun initializeEditText() {
