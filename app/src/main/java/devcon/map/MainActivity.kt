@@ -3,13 +3,16 @@ package devcon.map
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.widget.LinearLayout
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
+import com.kakao.vectormap.LatLng
 import com.kakao.vectormap.MapLifeCycleCallback
+import com.kakao.vectormap.camera.CameraUpdateFactory
 import devcon.map.databinding.ActivityMainBinding
 import devcon.map.feature.SearchActivity
 import devcon.map.model.Place
@@ -17,6 +20,7 @@ import devcon.map.model.Place
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
+    private lateinit var kakaoMap: KakaoMap
 
     private val searchActivityLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult(),
@@ -27,9 +31,15 @@ class MainActivity : AppCompatActivity() {
             } else {
                 result.data?.getParcelableExtra(RESULT_SEARCH_PLACE)
             }?.let { place ->
+                moveKakaoMapCamera(place)
                 showPlaceBottomSheet(place)
             }
         }
+    }
+
+    private fun moveKakaoMapCamera(place: Place) {
+        val position = LatLng.from(place.latitude, place.longitude)
+        kakaoMap.moveCamera(CameraUpdateFactory.newCenterPosition(position, MOVE_ZOOM_LEVEL))
     }
 
     private fun showPlaceBottomSheet(place: Place) {
@@ -75,7 +85,19 @@ class MainActivity : AppCompatActivity() {
                 }
             },
             object : KakaoMapReadyCallback() {
-                override fun onMapReady(kakaoMap: KakaoMap) {} // NOP
+                override fun onMapReady(kakaoMap: KakaoMap) {
+                    this@MainActivity.kakaoMap = kakaoMap
+                    kakaoMap.setOnCameraMoveEndListener { kakaoMap, cameraPosition, gestureType ->
+                        // TODO: Save last known position
+                        Log.i("MainActivity", "Gesture Type: $gestureType")
+                        Log.i("MainActivity", "Camera Position: $cameraPosition")
+                    }
+                }
+
+                override fun getPosition(): LatLng {
+                    // TODO: Set last known position
+                    return super.getPosition()
+                }
             }
         )
     }
@@ -91,6 +113,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
+        private const val MOVE_ZOOM_LEVEL = 15
+
         const val RESULT_SEARCH_PLACE = "result_search_place"
     }
 }
