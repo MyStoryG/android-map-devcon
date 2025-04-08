@@ -8,6 +8,7 @@ import android.util.Log
 import android.widget.LinearLayout
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
@@ -21,12 +22,16 @@ import com.kakao.vectormap.label.LabelTextBuilder
 import com.kakao.vectormap.label.LabelTextStyle
 import devcon.map.databinding.ActivityMainBinding
 import devcon.map.feature.SearchActivity
+import devcon.map.model.Location
 import devcon.map.model.Place
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
+    private val kakaoMapCompletableDeferred = CompletableDeferred<KakaoMap>()
+
     private lateinit var binding: ActivityMainBinding
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
-    private lateinit var kakaoMap: KakaoMap
 
     private val searchActivityLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult(),
@@ -37,21 +42,24 @@ class MainActivity : AppCompatActivity() {
             } else {
                 result.data?.getParcelableExtra(RESULT_SEARCH_PLACE)
             }?.let { place ->
-                moveKakaoMapCamera(place)
-                showPlaceMarker(place)
-                showPlaceBottomSheet(place)
+                lifecycleScope.launch {
+                    val position = place.location.run { LatLng.from(latitude, longitude) }
+                    moveKakaoMapCamera(position)
+                    showPlaceMarker(position, place.name)
+                    showPlaceBottomSheet(place.name, place.address)
+                }
             }
         }
     }
 
-    private fun moveKakaoMapCamera(place: Place) {
-        val position = LatLng.from(place.latitude, place.longitude)
+    private suspend fun moveKakaoMapCamera(position: LatLng) {
+        val kakaoMap = kakaoMapCompletableDeferred.await()
         kakaoMap.moveCamera(CameraUpdateFactory.newCenterPosition(position, MOVE_ZOOM_LEVEL))
     }
 
-    private fun showPlaceMarker(place: Place) {
+    private suspend fun showPlaceMarker(position: LatLng, name: String) {
+        val kakaoMap = kakaoMapCompletableDeferred.await()
         kakaoMap.labelManager?.let { labelManager ->
-            val position = LatLng.from(place.latitude, place.longitude)
             val styles = run {
                 val iconStyle = LabelStyle.from(R.drawable.icon_marker)
                 val textStyle = LabelTextStyle.from(24, Color.WHITE, 4, Color.BLACK)
@@ -60,17 +68,17 @@ class MainActivity : AppCompatActivity() {
             }
             val option = LabelOptions.from(position)
                 .setStyles(styles)
-                .setTexts(LabelTextBuilder().setTexts(place.name))
+                .setTexts(LabelTextBuilder().setTexts(name))
 
             labelManager.clearAll()
             labelManager.layer?.addLabel(option)
         }
     }
 
-    private fun showPlaceBottomSheet(place: Place) {
+    private fun showPlaceBottomSheet(name: String, address: String) {
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-        binding.textviewPlaceName.text = place.name
-        binding.textviewPlaceAddress.text = place.address
+        binding.textviewPlaceName.text = name
+        binding.textviewPlaceAddress.text = address
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -111,11 +119,11 @@ class MainActivity : AppCompatActivity() {
             },
             object : KakaoMapReadyCallback() {
                 override fun onMapReady(kakaoMap: KakaoMap) {
-                    this@MainActivity.kakaoMap = kakaoMap
                     kakaoMap.setOnCameraMoveEndListener { kakaoMap, cameraPosition, gestureType ->
                         // TODO: Save last known position
                         Log.i("MainActivity", "Gesture Type: $gestureType")
                         Log.i("MainActivity", "Camera Position: $cameraPosition")
+                    kakaoMapCompletableDeferred.complete(kakaoMap)
                     }
                 }
 

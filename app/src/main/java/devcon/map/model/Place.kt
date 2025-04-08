@@ -10,8 +10,7 @@ import kotlinx.parcelize.Parcelize
  * @param name The name of the place.
  * @param address The address of the place.
  * @param category The category of the place.
- * @param latitude The latitude of the place.
- * @param longitude The longitude of the place.
+ * @param location The location of the place.
  */
 @Parcelize
 data class Place(
@@ -19,6 +18,17 @@ data class Place(
     val name: String,
     val address: String,
     val category: String,
+    val location: Location,
+) : Parcelable
+
+/**
+ * The location of a place
+ *
+ * @param latitude The latitude of the location.
+ * @param longitude The longitude of the location.
+ */
+@Parcelize
+data class Location(
     val latitude: Double,
     val longitude: Double,
 ) : Parcelable

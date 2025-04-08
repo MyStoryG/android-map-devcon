@@ -9,6 +9,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import devcon.map.MapApplication
 import devcon.map.data.repository.SearchRepository
 import devcon.map.model.Keyword
+import devcon.map.model.Location
 import devcon.map.model.Place
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -63,8 +64,7 @@ class SearchViewModel(
                         name = it.placeName,
                         address = it.addressName,
                         category = it.categoryName,
-                        latitude = it.y.toDouble(),
-                        longitude = it.x.toDouble(),
+                        location = Location(it.y.toDouble(), it.x.toDouble()),
                     )
                 } ?: emptyList()
 
