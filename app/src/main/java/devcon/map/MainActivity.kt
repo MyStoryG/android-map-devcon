@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.LinearLayout
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -28,6 +29,7 @@ import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
+    private val userPreferencesViewModel by viewModels<UserPreferencesViewModel> { UserPreferencesViewModel.Factory }
     private val kakaoMapCompletableDeferred = CompletableDeferred<KakaoMap>()
 
     private lateinit var binding: ActivityMainBinding
@@ -88,12 +90,25 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setupUI()
+        setupEvent()
     }
 
     private fun setupUI() {
         initializeBottomSheet()
         initializeEditText()
         initializeMapView()
+    }
+
+    private fun setupEvent() {
+        userPreferencesViewModel.initialSetupEvent.observe(this) { userPreferences ->
+            lifecycleScope.launch {
+                val position = LatLng.from(
+                    userPreferences.lastKnownLatitude,
+                    userPreferences.lastKnownLongitude,
+                )
+                moveKakaoMapCamera(position)
+            }
+        }
     }
 
     private fun initializeBottomSheet() {
@@ -119,17 +134,12 @@ class MainActivity : AppCompatActivity() {
             },
             object : KakaoMapReadyCallback() {
                 override fun onMapReady(kakaoMap: KakaoMap) {
-                    kakaoMap.setOnCameraMoveEndListener { kakaoMap, cameraPosition, gestureType ->
-                        // TODO: Save last known position
-                        Log.i("MainActivity", "Gesture Type: $gestureType")
-                        Log.i("MainActivity", "Camera Position: $cameraPosition")
                     kakaoMapCompletableDeferred.complete(kakaoMap)
+                    kakaoMap.setOnCameraMoveEndListener { _, cameraPosition, _ ->
+                        val lastKnownLocation =
+                            cameraPosition.position.run { Location(latitude, longitude) }
+                        userPreferencesViewModel.updateLastKnownLocation(lastKnownLocation)
                     }
-                }
-
-                override fun getPosition(): LatLng {
-                    // TODO: Set last known position
-                    return super.getPosition()
                 }
             }
         )
