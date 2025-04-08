@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "devcon.map";
+
+message UserPreferences {
+  double last_known_latitude = 1;
+  double last_known_longitude = 2;
+}
