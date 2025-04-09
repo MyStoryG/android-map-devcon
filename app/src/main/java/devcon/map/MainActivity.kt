@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.LinearLayout
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -14,6 +15,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
 import com.kakao.vectormap.LatLng
+import com.kakao.vectormap.MapAuthException
 import com.kakao.vectormap.MapLifeCycleCallback
 import com.kakao.vectormap.camera.CameraUpdateFactory
 import com.kakao.vectormap.label.LabelOptions
@@ -25,6 +27,7 @@ import devcon.map.databinding.ActivityMainBinding
 import devcon.map.feature.SearchActivity
 import devcon.map.model.Location
 import devcon.map.model.Place
+import devcon.map.network.HttpStatusCode
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.launch
 
@@ -96,6 +99,7 @@ class MainActivity : AppCompatActivity() {
     private fun setupUI() {
         initializeBottomSheet()
         initializeEditText()
+        initializeButton()
         initializeMapView()
     }
 
@@ -123,13 +127,23 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun initializeButton() {
+        binding.buttonRefresh.setOnClickListener {
+            binding.layoutFailure.visibility = View.GONE
+            initializeMapView()
+        }
+    }
+
     private fun initializeMapView() {
         binding.mapview.start(
             object : MapLifeCycleCallback() {
                 override fun onMapDestroy() {} // NOP
 
-                override fun onMapError(e: Exception) {
-                    // TODO: Error handling
+                override fun onMapError(exception: Exception) {
+                    when (exception) {
+                        is MapAuthException -> handleMapAuthException(exception)
+                        else -> Log.e("MainActivity", "Unknown error", exception)
+                    }
                 }
             },
             object : KakaoMapReadyCallback() {
@@ -143,6 +157,29 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         )
+    }
+
+    private fun handleMapAuthException(exception: MapAuthException) {
+        when (exception.errorCode) {
+            MapAuthException.CONNECT_TIMEOUT_EXCEPTION -> R.string.message_map_auth_connect_timeout_exception
+            MapAuthException.SOCKET_TIMEOUT_EXCEPTION -> R.string.message_map_auth_socket_timeout_exception
+            MapAuthException.CONNECT_INITIATE_FAILURE -> R.string.message_map_auth_connect_initiate_failure
+            MapAuthException.CONNECT_ERROR -> R.string.message_map_auth_connect
+            HttpStatusCode.BAD_REQUEST -> R.string.message_http_bad_request
+            HttpStatusCode.UNAUTHORIZED -> R.string.message_http_unauthorized
+            HttpStatusCode.FORBIDDEN -> R.string.message_http_forbidden
+            HttpStatusCode.TOO_MANY_REQUEST -> R.string.message_http_too_many_request
+            HttpStatusCode.INTERNAL_SERVER_ERROR -> R.string.message_http_internal_server_error
+            HttpStatusCode.BAD_GATEWAY -> R.string.message_http_bad_gateway
+            HttpStatusCode.SERVICE_UNAVAILABLE -> R.string.message_http_service_unavailable
+            else -> R.string.message_map_auth_unknown_error
+        }.let { resId ->
+            with(binding) {
+                layoutFailure.visibility = View.VISIBLE
+                textviewFailureMessage.text = getString(resId)
+                textviewExceptionMessage.text = exception.message
+            }
+        }
     }
 
     override fun onPause() {
