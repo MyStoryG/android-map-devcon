@@ -11,9 +11,11 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.DividerItemDecoration
+import devcon.map.MainActivity
 import devcon.map.R
 import devcon.map.databinding.ActivitySearchBinding
 import devcon.map.model.Keyword
+import devcon.map.model.Place
 import devcon.map.ui.HorizontalSpaceDecoration
 import kotlinx.coroutines.launch
 
@@ -57,7 +59,10 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun initializeKeywordRecyclerView() {
-        keywordAdapter = KeywordAdapter { keyword -> searchViewModel.deleteKeyword(keyword) }
+        keywordAdapter = KeywordAdapter(
+            onItemClick = { keyword -> binding.edittextSearch.setText(keyword.word) },
+            onItemDelete = { keyword -> searchViewModel.deleteKeyword(keyword) },
+        )
 
         binding.recyclerviewKeyword.apply {
             adapter = keywordAdapter
@@ -71,6 +76,7 @@ class SearchActivity : AppCompatActivity() {
     private fun initializePlaceRecyclerView() {
         placeAdapter = PlaceAdapter { place ->
             searchViewModel.searchKeyword(Keyword(word = place.name))
+            finishForResult(place)
         }
 
         binding.recyclerviewPlace.apply {
@@ -78,6 +84,13 @@ class SearchActivity : AppCompatActivity() {
 
             addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
         }
+    }
+
+    private fun finishForResult(place: Place) {
+        intent.putExtra(MainActivity.RESULT_SEARCH_PLACE, place)
+        setResult(RESULT_OK, intent)
+
+        finish()
     }
 
     private fun initializeEditText() {

@@ -9,6 +9,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import devcon.map.MapApplication
 import devcon.map.data.repository.SearchRepository
 import devcon.map.model.Keyword
+import devcon.map.model.Location
 import devcon.map.model.Place
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -58,7 +59,13 @@ class SearchViewModel(
             val response = searchRepository.getSearchKeyword(page, size, query)
             if (response.isSuccessful) {
                 val places = response.body()?.documents?.map {
-                    Place(it.id, it.placeName, it.addressName, it.categoryName)
+                    Place(
+                        id = it.id,
+                        name = it.placeName,
+                        address = it.addressName,
+                        category = it.categoryName,
+                        location = Location(it.y.toDouble(), it.x.toDouble()),
+                    )
                 } ?: emptyList()
 
                 _uiState.update { currentState ->
