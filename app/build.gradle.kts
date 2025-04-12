@@ -60,8 +60,6 @@ dependencies {
     implementation("androidx.datastore:datastore:1.1.4")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.8.7")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 
     // Google Material
     implementation("com.google.android.material:material:1.11.0")
@@ -77,8 +75,15 @@ dependencies {
     // Protobuf
     implementation("com.google.protobuf:protobuf-javalite:4.30.2")
 
-    // Junit
+    // Unit Test
     testImplementation("junit:junit:4.13.2")
+    testImplementation("io.mockk:mockk:1.14.0")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+
+    // UI Test
+    androidTestImplementation("io.mockk:mockk-android:1.14.0")
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 }
 
 protobuf {
